@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getPostByNo } from '../../Data';
 import './Post.css';
+import axios from 'axios';
 
 const PostView = ({ history, location, match }) => {
 	const [ data, setData ] = useState({});
@@ -10,6 +11,28 @@ const PostView = ({ history, location, match }) => {
 	useEffect(() => {
 		setData(getPostByNo(no));
 	}, [ ]);
+	
+	const [ aaa, setAaa ] = useState([]);
+	useEffect(() => {
+		const fff = async () => {
+			console.log('@@@');
+			try {
+				
+				setAaa(null);
+				
+				const response = await axios.get('https://jsonplaceholder.typicode.com/users');
+				
+				setAaa(response);
+				
+			} catch (err) {
+				console.log(err);
+			}
+		};
+		
+		fff();
+	}, []);
+	
+		
 	
 	return (
 		<>
@@ -48,6 +71,13 @@ const PostView = ({ history, location, match }) => {
 			}
 			<button className="post-view-go-list-btn" onClick={() => history.goBack()}>목록으로 돌아가기</button>
 		</div>
+		
+		
+					<div>
+						{JSON.stringify(aaa)}
+					</div>
+		
+		
 		</>
 	)
 }
