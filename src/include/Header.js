@@ -1,3 +1,4 @@
+// 안씀
 import { Link } from "react-router-dom";
 
 function Header() {
@@ -5,6 +6,9 @@ function Header() {
     <header>
       <Link to="/">
         <button>Home</button>
+      </Link>
+      <Link to="/profile">
+        <button>Profile</button>
       </Link>
       <Link to="/about">
         <button>about</button>

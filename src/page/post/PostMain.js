@@ -1,12 +1,12 @@
-import React from 'react';
-import PostList from './PostList';
+import React from "react";
+import PostList from "./PostList";
 
-const PostMain = props => {
-	return (
-		<>
-			<PostList />
-		</>
-	)
-}
+const PostMain = (props) => {
+  return (
+    <>
+      <PostList />
+    </>
+  );
+};
 
 export default PostMain;

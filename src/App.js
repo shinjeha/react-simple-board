@@ -1,18 +1,73 @@
+import React, { useState } from "react";
 import { Link, BrowserRouter, Route, Switch } from "react-router-dom";
-import Header from "./include/Header";
+//import Header from "./include/Header";
 import Home from "./page/common/Home";
 import PostMain from "./page/post/PostMain";
 import PostView from "./page/post/PostView";
 import NotFound from "./page/common/NotFound";
+import AuthRoute from "./AuthRoute";
+import LoginForm from "./page/common/LoginForm";
+import LogoutButton from "./page/common/LogoutButton";
+import MovieList from "./page/movie/MovieList";
+
+// test
+import Profile from "./test/Profile";
+import { signIn } from "./test/auth.js";
 
 function App() {
+  const [user, setUser] = useState(null);
+  const authenticated = user != null;
+
+  const login = ({ email, password }) => setUser(signIn({ email, password }));
+  const logout = () => setUser(null);
+
   return (
     <BrowserRouter>
-      <Header />
+      <header>
+        <Link to="/">
+          <button>Home</button>
+        </Link>
+        <Link to="/profile">
+          <button>Profile</button>
+        </Link>
+        <Link to="/movieList">
+          <button>movieList</button>
+        </Link>
+        <Link to="/postMain">
+          <button>postMain</button>
+        </Link>
+        {authenticated ? (
+          <LogoutButton logout={logout} />
+        ) : (
+          <Link to="/login">
+            <button>Login</button>
+          </Link>
+        )}
+      </header>
       <hr />
       <main>
         <Switch>
           <Route exact path="/" component={Home} />
+          <Route
+            path="/login"
+            render={(props) => (
+              <LoginForm
+                authenticated={authenticated}
+                login={login}
+                {...props}
+              />
+            )}
+          />
+          <AuthRoute
+            authenticated={authenticated}
+            path="/profile"
+            render={(props) => <Profile user={user} {...props} />}
+          />
+          <AuthRoute
+            authenticated={authenticated}
+            path="/movieList"
+            render={(props) => <MovieList user={user} {...props} />}
+          />
           <Route exact path="/postMain" component={PostMain} />
           <Route exact path="/postView/:no" component={PostView} />
           <Route component={NotFound} />
