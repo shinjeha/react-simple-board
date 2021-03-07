@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getPostByNo } from "../../Data";
+import { getPostByNo } from "../../test/Data";
 import "./Post.css";
 
 const PostView = ({ history, location, match }) => {
