@@ -1,15 +1,24 @@
-import { BrowserRouter, Route } from 'react-router-dom';
-import PostMain from './page/post/PostMain';
-import PostView from './page/post/PostView';
+import { Link, BrowserRouter, Route, Switch } from "react-router-dom";
+import Header from "./include/Header";
+import Home from "./page/common/Home";
+import PostMain from "./page/post/PostMain";
+import PostView from "./page/post/PostView";
+import NotFound from "./page/common/NotFound";
 
 function App() {
   return (
-		<div className="App">
-			<BrowserRouter>
-				<Route exact path='/postView/:no' component={PostView} />
-				<Route exact path='/' component={PostMain} />
-			</BrowserRouter>
-		</div>
+    <BrowserRouter>
+      <Header />
+      <hr />
+      <main>
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route exact path="/postMain" component={PostMain} />
+          <Route exact path="/postView/:no" component={PostView} />
+          <Route component={NotFound} />
+        </Switch>
+      </main>
+    </BrowserRouter>
   );
 }
 
