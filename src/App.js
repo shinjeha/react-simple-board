@@ -1,3 +1,4 @@
+import './App.css';
 import React, { useState } from "react";
 import { Link, BrowserRouter, Route, Switch } from "react-router-dom";
 //import Header from "./include/Header";
@@ -10,16 +11,21 @@ import LoginForm from "./page/common/LoginForm";
 import LogoutButton from "./page/common/LogoutButton";
 import MovieList from "./page/movie/MovieList";
 
+import { signIn } from "./util/Auth";
+
 // test
-import Profile from "./test/Profile";
-import { signIn } from "./test/auth.js";
+//import Profile from "./test/Profile";
+//import { signIn } from "./test/auth.js";
 
 function App() {
-  const [user, setUser] = useState(null);
-  const authenticated = user != null;
+  //const [user, setUser] = useState(null);
+	const [token, setToken] = useState(null);
+	const authenticated = token != null;
 
-  const login = ({ email, password }) => setUser(signIn({ email, password }));
-  const logout = () => setUser(null);
+  //const login = ({ email, password }) => setUser(signIn({ email, password }));
+	const login = async ({ id, password }) => setToken(await signIn({ id, password }));
+  //const logout = () => setUser(null);
+	const logout = () => setToken(null);
 
   return (
     <BrowserRouter>
@@ -37,11 +43,17 @@ function App() {
           <button>postMain</button>
         </Link>
         {authenticated ? (
-          <LogoutButton logout={logout} />
+					<>
+          	<LogoutButton logout={logout} />
+						<span className="isLogin">on</span>
+					</>
         ) : (
-          <Link to="/login">
-            <button>Login</button>
-          </Link>
+					<>
+          	<Link to="/login">
+            	<button>Login</button>
+          	</Link>
+						<span className="isLogin">off</span>
+					</>
         )}
       </header>
       <hr />
@@ -58,15 +70,15 @@ function App() {
               />
             )}
           />
-          <AuthRoute
+          {/* <AuthRoute
             authenticated={authenticated}
             path="/profile"
             render={(props) => <Profile user={user} {...props} />}
-          />
+          /> */}
           <AuthRoute
             authenticated={authenticated}
             path="/movieList"
-            render={(props) => <MovieList user={user} {...props} />}
+            render={(props) => <MovieList token={token} {...props} />}
           />
           <Route exact path="/postMain" component={PostMain} />
           <Route exact path="/postView/:no" component={PostView} />

@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
 
 function LoginForm({ authenticated, login, location }) {
-  const [email, setEmail] = useState("");
+  const [id, setId] = useState("");
   const [password, setPassword] = useState("");
 
   const handleClick = () => {
     try {
-      login({ email, password });
+      login({ id, password });
     } catch (e) {
       alert("Failed to login");
-      setEmail("");
+      setId("");
       setPassword("");
     }
   };
@@ -22,10 +22,10 @@ function LoginForm({ authenticated, login, location }) {
     <>
       <h1>Login</h1>
       <input
-        value={email}
-        onChange={({ target: { value } }) => setEmail(value)}
+        value={id}
+        onChange={({ target: { value } }) => setId(value)}
         type="text"
-        placeholder="email"
+        placeholder="Id"
       />
       <input
         value={password}
