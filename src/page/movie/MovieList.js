@@ -3,37 +3,33 @@ import CommonTable from "../../component/table/CommonTable";
 import CommonTableColumn from "../../component/table/CommonTableColumn";
 import CommonTableRow from "../../component/table/CommonTableRow";
 //import movieList from "../../test/MovieData";
-const axios = require('axios');
+const axios = require("axios");
 
-const MovieList = ({ token }) => {
+const MovieList = ({ authObject }) => {
+  const [movieList, setMovieList] = useState([]);
 
-	const [movieList, setMovieList] = useState([]);
+  useEffect(() => {
+    async function fetchData() {
+      const url = "http://192.168.1.29:3000/v1/movies";
+      const response = await axios.get(url, {
+        headers: {
+          "api-version": "1.2",
+          "content-type": "application/json",
+          "x-access-token": authObject.accessToken,
+          "x-refresh-token": authObject.getRefreshToken(),
+        },
+      });
 
-	useEffect(() => {
-		async function fetchData() {
-			const url = 'http://192.168.1.29:3000/v1/movies';
-			const response = await axios.get(
-				url,
-				{
-					headers: {
-						'api-version': '1.2',
-						'content-type': 'application/json',
-						'x-access-token': token.accessToken,
-						'x-refresh-token': token.refreshToken
-					}
-				}
-			)
+      console.log(response);
+      if (response.status === 200) {
+        setMovieList(response.data);
+      } else {
+        alert("에러!");
+      }
+    }
 
-			console.log(response);
-			if (response.status === 200) {
-				setMovieList(response.data);
-			} else {
-				alert('에러!');
-			}
-		}
-
-		fetchData();
-	}, []);
+    fetchData();
+  }, []);
 
   return (
     <CommonTable headersName={["id", "name", "year", "director", "poster"]}>
@@ -46,7 +42,11 @@ const MovieList = ({ token }) => {
                 <CommonTableColumn>{item.year}</CommonTableColumn>
                 <CommonTableColumn>{item.director}</CommonTableColumn>
                 <CommonTableColumn>
-                  <img src={item.poster} alt="포스터" style={{width: 185, height: 260}}></img>
+                  <img
+                    src={item.poster}
+                    alt="포스터"
+                    style={{ width: 185, height: 260 }}
+                  ></img>
                 </CommonTableColumn>
               </CommonTableRow>
             );

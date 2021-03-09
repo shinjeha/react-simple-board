@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
 
-function LoginForm({ authenticated, login, location }) {
+function LoginForm({ isLogin, login, location }) {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
 
@@ -16,7 +16,7 @@ function LoginForm({ authenticated, login, location }) {
   };
 
   const { from } = location.state || { from: { pathname: "/" } };
-  if (authenticated) return <Redirect to={from} />;
+  if (isLogin) return <Redirect to={from} />;
 
   return (
     <>

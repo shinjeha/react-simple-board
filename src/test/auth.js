@@ -1,14 +1,18 @@
-const users = [
-  { email: "kim@test.com", password: "123", name: "Kim" },
-  { email: "lee@test.com", password: "456", name: "Lee" },
-  { email: "park@test.com", password: "789", name: "Park" },
-];
+const users = [{ id: "123", password: "123" }];
 
-export function signIn({ email, password }) {
+export function signIn({ id, password }) {
   const user = users.find(
-    (user) => user.email === email && user.password === password
+    (user) => user.id === id && user.password === password
   );
 
-  if (user === undefined) throw new Error();
-  return user;
+  if (user === undefined) {
+    throw new Error();
+  } else {
+    document.cookie = "x-auth=456;";
+  }
+
+  return {
+    accessToken: "123",
+    refreshToken: "456",
+  };
 }

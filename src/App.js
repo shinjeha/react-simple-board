@@ -1,6 +1,9 @@
 import "./App.css";
 import React, { useState } from "react";
 import { Link, BrowserRouter, Route, Switch } from "react-router-dom";
+import { useObserver, observer } from "mobx-react";
+import { autorun } from "mobx";
+import store from "./store/index";
 //import Header from "./include/Header";
 import Home from "./page/common/Home";
 import PostMain from "./page/post/PostMain";
@@ -11,7 +14,7 @@ import LoginForm from "./page/common/LoginForm";
 import LogoutButton from "./page/common/LogoutButton";
 import MovieList from "./page/movie/MovieList";
 
-import { signIn } from "./util/Auth";
+//import { signIn } from "./util/Auth";
 
 // test
 //import Profile from "./test/Profile";
@@ -19,15 +22,19 @@ import { signIn } from "./util/Auth";
 import mobxCounter from "./mobxtest/mobxCounter";
 
 function App() {
+  const { authObject } = store;
+  useObserver(() => {
+    authObject.checkIsLogin();
+  });
+  console.log(authObject.isLogin);
   //const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
-  const authenticated = token != null;
-
-  //const login = ({ email, password }) => setUser(signIn({ email, password }));
-  const login = async ({ id, password }) =>
-    setToken(await signIn({ id, password }));
+  //const [token, setToken] = useState(null);
+  //const authenticated = token != null;
+  //const login = ({ id, password }) => setToken(signIn({ id, password }));
+  //const login = async ({ id, password }) => setToken(await signIn({ id, password }));
+  const login = ({ id, password }) => authObject.testLogin({ id, password });
   //const logout = () => setUser(null);
-  const logout = () => setToken(null);
+  //const logout = () => setToken(null);
 
   return (
     <BrowserRouter>
@@ -44,9 +51,9 @@ function App() {
         <Link to="/postMain">
           <button>postMain</button>
         </Link>
-        {authenticated ? (
+        {authObject.isLogin ? (
           <>
-            <LogoutButton logout={logout} />
+            <LogoutButton logout={authObject.logout()} />
             <span className="isLogin">on</span>
           </>
         ) : (
@@ -69,7 +76,7 @@ function App() {
             path="/login"
             render={(props) => (
               <LoginForm
-                authenticated={authenticated}
+                isLogin={authObject.isLogin}
                 login={login}
                 {...props}
               />
@@ -81,9 +88,9 @@ function App() {
             render={(props) => <Profile user={user} {...props} />}
           /> */}
           <AuthRoute
-            authenticated={authenticated}
+            isLogin={authObject.isLogin}
             path="/movieList"
-            render={(props) => <MovieList token={token} {...props} />}
+            render={(props) => <MovieList authObject={authObject} {...props} />}
           />
           <Route exact path="/postMain" component={PostMain} />
           <Route exact path="/postView/:no" component={PostView} />
@@ -95,4 +102,4 @@ function App() {
   );
 }
 
-export default App;
+export default observer(App);
