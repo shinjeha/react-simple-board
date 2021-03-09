@@ -1,4 +1,4 @@
-import './App.css';
+import "./App.css";
 import React, { useState } from "react";
 import { Link, BrowserRouter, Route, Switch } from "react-router-dom";
 //import Header from "./include/Header";
@@ -16,16 +16,18 @@ import { signIn } from "./util/Auth";
 // test
 //import Profile from "./test/Profile";
 //import { signIn } from "./test/auth.js";
+import mobxCounter from "./mobxtest/mobxCounter";
 
 function App() {
   //const [user, setUser] = useState(null);
-	const [token, setToken] = useState(null);
-	const authenticated = token != null;
+  const [token, setToken] = useState(null);
+  const authenticated = token != null;
 
   //const login = ({ email, password }) => setUser(signIn({ email, password }));
-	const login = async ({ id, password }) => setToken(await signIn({ id, password }));
+  const login = async ({ id, password }) =>
+    setToken(await signIn({ id, password }));
   //const logout = () => setUser(null);
-	const logout = () => setToken(null);
+  const logout = () => setToken(null);
 
   return (
     <BrowserRouter>
@@ -43,18 +45,21 @@ function App() {
           <button>postMain</button>
         </Link>
         {authenticated ? (
-					<>
-          	<LogoutButton logout={logout} />
-						<span className="isLogin">on</span>
-					</>
+          <>
+            <LogoutButton logout={logout} />
+            <span className="isLogin">on</span>
+          </>
         ) : (
-					<>
-          	<Link to="/login">
-            	<button>Login</button>
-          	</Link>
-						<span className="isLogin">off</span>
-					</>
+          <>
+            <Link to="/login">
+              <button>Login</button>
+            </Link>
+            <span className="isLogin">off</span>
+          </>
         )}
+        <Link to="/mobxCounter">
+          <button>mobxCounter</button>
+        </Link>
       </header>
       <hr />
       <main>
@@ -82,6 +87,7 @@ function App() {
           />
           <Route exact path="/postMain" component={PostMain} />
           <Route exact path="/postView/:no" component={PostView} />
+          <Route path="/mobxCounter" component={mobxCounter} />
           <Route component={NotFound} />
         </Switch>
       </main>
