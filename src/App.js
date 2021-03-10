@@ -22,9 +22,24 @@ import MovieList from "./page/movie/MovieList";
 import mobxCounter from "./mobxtest/mobxCounter";
 import auth from "./store/auth";
 
+import axios from './util/AxiosUt';
+
 function App() {
   const { authObject } = store;
 	console.log(authObject.isLogin);
+
+	autorun(() => {
+		if (document.cookie) {
+			console.log('!!');
+			authObject.isLogin = true;
+		}
+
+		if (authObject.isLogin && !authObject.accessToken) {
+			console.log('@@');
+			authObject.requestToken();
+		}
+	});
+
   //const [user, setUser] = useState(null);
   //const [token, setToken] = useState(null);
   //const authenticated = token != null;
@@ -40,9 +55,9 @@ function App() {
         <Link to="/">
           <button>Home</button>
         </Link>
-        <Link to="/profile">
+        {/* <Link to="/profile">
           <button>Profile</button>
-        </Link>
+        </Link> */}
         <Link to="/movieList">
           <button>movieList</button>
         </Link>
@@ -81,12 +96,10 @@ function App() {
             )}
           />
           {/* <AuthRoute
-            authenticated={authenticated}
             path="/profile"
             render={(props) => <Profile user={user} {...props} />}
           /> */}
           <AuthRoute
-            isLogin={authObject.isLogin}
             path="/movieList"
             render={(props) => <MovieList authObject={authObject} {...props} />}
           />

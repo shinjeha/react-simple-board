@@ -1,4 +1,5 @@
 import { observable, makeAutoObservable } from "mobx";
+import { Route, Redirect } from "react-router-dom";
 /*
 function auth() {
   return makeAutoObservable({
@@ -29,6 +30,48 @@ const axios = require("axios");
 const auth = observable({
   accessToken: "",
   isLogin: false,
+	requestToken() {
+		console.log('토큰 다시');
+		const url = "http://192.168.1.29:3000/v1/auth/certify";
+
+		/*
+		const response = yield axios.post(url, {}, {
+			headers: {
+				"api-version": "1.2",
+        "content-type": "application/json",
+				"x-refresh-token": this.getRefreshToken(),
+			}
+		});
+
+		document.cookie = `x-auth=${response.data.auth_info.refreshToken}`;
+		this.accessToken = response.data.auth_info.accessToken;
+
+		if (response.status === 401) {
+			alert('로그아웃 됨');
+			this.logout();
+		}
+		*/
+
+		axios.post(url, {}, {
+			headers: {
+				"api-version": "1.2",
+				"content-type": "application/json",
+				"x-refresh-token": this.getRefreshToken(),
+			}
+		})
+		.then( response => {
+
+
+			document.cookie = `x-auth=${response.data.auth_info.refreshToken}`;
+			this.accessToken = response.data.auth_info.accessToken;
+
+			console.log(this.accessToken);
+		})
+		.catch( error => {
+			alert('로그아웃 됨');
+			this.logout();
+		});
+	},
   getRefreshToken() {
     return document.cookie.split("=")[1];
   },
@@ -42,8 +85,9 @@ const auth = observable({
     }
   },
   logout() {
-    document.cookie = "";
-    this.isLogin = false;
+		console.log('로그아웃');
+    document.cookie = "x-auth=; max-age=-1";
+    this.isLogin = false
   },
   * login({ id, password }) {
     const url = "http://192.168.1.29:3000/v1/auth/login";
@@ -52,12 +96,14 @@ const auth = observable({
       pass: password,
     };
 
-    const response = yield axios.post(url, data, {
-      headers: {
-        "api-version": "1.2",
-        "content-type": "application/json",
-      },
-    });
+		const response = yield axios.post(url, data);
+
+    // const response = yield axios.post(url, data, {
+    //   headers: {
+    //     "api-version": "1.2",
+    //     "content-type": "application/json",
+    //   },
+    // });
 
     if (response.data.msg === "ok") {
       document.cookie = `x-auth=${response.data.auth_info.refreshToken}`;

@@ -1,13 +1,16 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
 
-function AuthRoute({ isLogin, component: Component, render, ...rest }) {
-  console.log(isLogin);
+import store from './store/index';
+
+function AuthRoute({ component: Component, render, ...rest }) {
+	const { authObject } = store;
+
   return (
     <Route
       {...rest}
       render={(props) =>
-        isLogin ? (
+        authObject.isLogin ? (
           render ? (
             render(props)
           ) : (
