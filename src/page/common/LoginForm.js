@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
 
+import { observer } from "mobx-react";
+
 function LoginForm({ isLogin, login, location }) {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
@@ -38,4 +40,4 @@ function LoginForm({ isLogin, login, location }) {
   );
 }
 
-export default LoginForm;
+export default observer(LoginForm);

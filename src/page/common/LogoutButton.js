@@ -1,13 +1,15 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
 
-function LogoutButton({ logout, history }) {
+import { observer } from "mobx-react";
+
+function LogoutButton({ authObject, history }) {
   const handleClick = () => {
-    logout();
+    authObject.logout();
     history.push("/");
   };
 
   return <button onClick={handleClick}>Logout</button>;
 }
 
-export default withRouter(LogoutButton);
+export default withRouter(observer(LogoutButton));

@@ -7,7 +7,7 @@ const axios = require("axios");
 
 const MovieList = ({ authObject }) => {
   const [movieList, setMovieList] = useState([]);
-
+console.log(authObject.accessToken);
   useEffect(() => {
     async function fetchData() {
       const url = "http://192.168.1.29:3000/v1/movies";

@@ -1,5 +1,5 @@
 import "./App.css";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, BrowserRouter, Route, Switch } from "react-router-dom";
 import { useObserver, observer } from "mobx-react";
 import { autorun } from "mobx";
@@ -20,19 +20,17 @@ import MovieList from "./page/movie/MovieList";
 //import Profile from "./test/Profile";
 //import { signIn } from "./test/auth.js";
 import mobxCounter from "./mobxtest/mobxCounter";
+import auth from "./store/auth";
 
 function App() {
   const { authObject } = store;
-  useObserver(() => {
-    authObject.checkIsLogin();
-  });
-  console.log(authObject.isLogin);
+	console.log(authObject.isLogin);
   //const [user, setUser] = useState(null);
   //const [token, setToken] = useState(null);
   //const authenticated = token != null;
   //const login = ({ id, password }) => setToken(signIn({ id, password }));
   //const login = async ({ id, password }) => setToken(await signIn({ id, password }));
-  const login = ({ id, password }) => authObject.testLogin({ id, password });
+  const login = ({ id, password }) => authObject.login({ id, password });
   //const logout = () => setUser(null);
   //const logout = () => setToken(null);
 
@@ -53,15 +51,15 @@ function App() {
         </Link>
         {authObject.isLogin ? (
           <>
-            <LogoutButton logout={authObject.logout()} />
-            <span className="isLogin">on</span>
+            <LogoutButton authObject={authObject} />
+            <span className="checkLogin">on</span>
           </>
         ) : (
           <>
             <Link to="/login">
               <button>Login</button>
             </Link>
-            <span className="isLogin">off</span>
+            <span className="checkLogin">off</span>
           </>
         )}
         <Link to="/mobxCounter">

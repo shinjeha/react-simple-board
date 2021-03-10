@@ -45,14 +45,14 @@ const auth = observable({
     document.cookie = "";
     this.isLogin = false;
   },
-  async login({ id, password }) {
+  * login({ id, password }) {
     const url = "http://192.168.1.29:3000/v1/auth/login";
     const data = {
       uid: id,
       pass: password,
     };
 
-    const response = await axios.post(url, data, {
+    const response = yield axios.post(url, data, {
       headers: {
         "api-version": "1.2",
         "content-type": "application/json",
@@ -61,7 +61,9 @@ const auth = observable({
 
     if (response.data.msg === "ok") {
       document.cookie = `x-auth=${response.data.auth_info.refreshToken}`;
+			this.accessToken = response.data.auth_info.accessToken;
       this.isLogin = true;
+			console.log('로그인 완료');
     } else {
       throw new Error();
     }
@@ -77,6 +79,7 @@ const auth = observable({
       throw new Error();
     } else {
       document.cookie = "x-auth=456;";
+			this.accessToken = '123';
       this.isLogin = true;
     }
   },
