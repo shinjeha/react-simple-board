@@ -1,44 +1,39 @@
-import "./App.css";
-import React, { useState, useEffect } from "react";
-import { Link, BrowserRouter, Route, Switch } from "react-router-dom";
-import { useObserver, observer } from "mobx-react";
-import { autorun } from "mobx";
-import store from "./store/index";
+import './App.css';
+import React from 'react';
+import { Link, BrowserRouter, Route, Switch } from 'react-router-dom';
+import { observer } from 'mobx-react';
+import { autorun, runInAction } from 'mobx';
+import store from './store/index';
 //import Header from "./include/Header";
-import Home from "./page/common/Home";
-import PostMain from "./page/post/PostMain";
-import PostView from "./page/post/PostView";
-import NotFound from "./page/common/NotFound";
-import AuthRoute from "./AuthRoute";
-import LoginForm from "./page/common/LoginForm";
-import LogoutButton from "./page/common/LogoutButton";
-import MovieList from "./page/movie/MovieList";
+import Home from './page/common/Home';
+import PostMain from './page/post/PostMain';
+import PostView from './page/post/PostView';
+import NotFound from './page/common/NotFound';
+import AuthRoute from './AuthRoute';
+import LoginForm from './page/common/LoginForm';
+import LogoutButton from './page/common/LogoutButton';
+import MovieList from './page/movie/MovieList';
 
-//import { signIn } from "./util/Auth";
+//import { signIn } from "./util/Auth"
 
 // test
 //import Profile from "./test/Profile";
 //import { signIn } from "./test/auth.js";
-import mobxCounter from "./mobxtest/mobxCounter";
-import auth from "./store/auth";
+import mobxCounter from './mobxtest/mobxCounter';
+//import auth from './store/auth';
 
 import axios from './util/AxiosUt';
 
 function App() {
   const { authObject } = store;
-	console.log(authObject.isLogin);
 
-	autorun(() => {
-		if (document.cookie) {
-			console.log('!!');
-			authObject.isLogin = true;
-		}
-
-		if (authObject.isLogin && !authObject.accessToken) {
-			console.log('@@');
-			authObject.requestToken();
-		}
-	});
+  console.log('판단전 isLogin : ' + authObject.isLogin);
+  // 로그인 여부 판단
+  if (!authObject.isLogin && document.cookie) {
+    console.log('쿠키 판단 후 isLogin true');
+    authObject.isLogin = true;
+  }
+  console.log('판단후 isLogin : ' + authObject.isLogin);
 
   //const [user, setUser] = useState(null);
   //const [token, setToken] = useState(null);
@@ -113,4 +108,5 @@ function App() {
   );
 }
 
+// observer : 값 변경 관찰하여 반영
 export default observer(App);

@@ -1,102 +1,66 @@
-import { observable, makeAutoObservable } from "mobx";
-import { Route, Redirect } from "react-router-dom";
-/*
-function auth() {
-  return makeAutoObservable({
-    accessToken: "",
-    refershToken: "",
-    isLogin: false,
-    setCookie() {
-      document.cookie = `x-auth=${this.refershToken}`;
-    },
-    getRefreshToken() {
-      return document.cookie.split("=")[1];
-    },
-    checkIsLogin() {
-      if (document.cookie) {
-        console.log("QQQ");
-        this.isLogin = true;
-      } else {
-        console.log("ZZZ");
-        this.isLogin = false;
-      }
-    },
-  });
-}
-*/
-
-const axios = require("axios");
+import { observable } from 'mobx';
+const axios = require('axios');
 
 const auth = observable({
-  accessToken: "",
+  accessToken: '',
   isLogin: false,
-	requestToken() {
-		console.log('토큰 다시');
-		const url = "http://192.168.1.29:3000/v1/auth/certify";
+  *requestToken(beforeRequest = null) {
+    console.log('엑세스 토큰 다시 요청');
+    const url = 'http://192.168.1.29:3000/v1/auth/certify';
 
-		/*
-		const response = yield axios.post(url, {}, {
-			headers: {
-				"api-version": "1.2",
-        "content-type": "application/json",
-				"x-refresh-token": this.getRefreshToken(),
-			}
-		});
-
-		document.cookie = `x-auth=${response.data.auth_info.refreshToken}`;
-		this.accessToken = response.data.auth_info.accessToken;
-
-		if (response.status === 401) {
-			alert('로그아웃 됨');
-			this.logout();
-		}
-		*/
-
-		axios.post(url, {}, {
-			headers: {
-				"api-version": "1.2",
-				"content-type": "application/json",
-				"x-refresh-token": this.getRefreshToken(),
-			}
-		})
-		.then( response => {
-
-
+		try {
+			const response = yield axios.post(url, {});
 			document.cookie = `x-auth=${response.data.auth_info.refreshToken}`;
 			this.accessToken = response.data.auth_info.accessToken;
+		} catch (err) {
+			console.log('다시 요청 중 에러');
+			console.error(err);
+		}
 
-			console.log(this.accessToken);
-		})
-		.catch( error => {
-			alert('로그아웃 됨');
-			this.logout();
-		});
-	},
-  getRefreshToken() {
-    return document.cookie.split("=")[1];
+/*
+    axios.post(url, {},
+        // {
+        //   headers: {
+        //     'api-version': '1.2',
+        //     'content-type': 'application/json',
+        //     'x-refresh-token': this.getRefreshToken(),
+        //   },
+        // }
+      )
+      .then((response) => {
+        document.cookie = `x-auth=${response.data.auth_info.refreshToken}`;
+        this.accessToken = response.data.auth_info.accessToken;
+
+        console.log('새롭게 받아온 엑세스 토큰 : ' + this.accessToken);
+console.log('이전 요청' + JSON.stringify(beforeRequest));
+      })
+      .catch((error) => {
+        if (error.response.status === 401) {
+          alert('로그아웃 됨');
+          this.logout();
+        }
+      });
+*/
+
   },
-  checkIsLogin() {
-    if (document.cookie) {
-      console.log("QQQ");
-      this.isLogin = true;
-    } else {
-      console.log("ZZZ");
-      this.isLogin = false;
-    }
+  getRefreshToken() {
+    return document.cookie.split('=')[1];
   },
   logout() {
-		console.log('로그아웃');
-    document.cookie = "x-auth=; max-age=-1";
-    this.isLogin = false
+    console.log('로그아웃');
+		alert('로그아웃 되었습니다.');
+    document.cookie = 'x-auth=; max-age=-1';
+		this.accessToken = '';
+    this.isLogin = false;
   },
-  * login({ id, password }) {
-    const url = "http://192.168.1.29:3000/v1/auth/login";
+  *login({ id, password }) {
+    const url = 'http://192.168.1.29:3000/v1/auth/login';
     const data = {
       uid: id,
       pass: password,
     };
 
-		const response = yield axios.post(url, data);
+    const response = yield axios.post(url, data);
 
     // const response = yield axios.post(url, data, {
     //   headers: {
@@ -105,17 +69,17 @@ const auth = observable({
     //   },
     // });
 
-    if (response.data.msg === "ok") {
+    if (response.data.msg === 'ok') {
       document.cookie = `x-auth=${response.data.auth_info.refreshToken}`;
-			this.accessToken = response.data.auth_info.accessToken;
+      this.accessToken = response.data.auth_info.accessToken;
       this.isLogin = true;
-			console.log('로그인 완료');
+      console.log('로그인 완료');
     } else {
       throw new Error();
     }
   },
   testLogin({ id, password }) {
-    const testUser = [{ id: "123", password: "123" }];
+    const testUser = [{ id: '123', password: '123' }];
     console.log(id, password);
     const user = testUser.find(
       (user) => user.id === id && user.password === password
@@ -124,8 +88,8 @@ const auth = observable({
     if (user === undefined) {
       throw new Error();
     } else {
-      document.cookie = "x-auth=456;";
-			this.accessToken = '123';
+      document.cookie = 'x-auth=456;';
+      this.accessToken = '123';
       this.isLogin = true;
     }
   },

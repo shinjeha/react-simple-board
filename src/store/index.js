@@ -1,5 +1,6 @@
-import authObject from "./auth";
+import authObject from './auth';
+import movieObject from './movie';
 
-const store = { authObject };
+const store = { authObject, movieObject };
 
 export default store;
